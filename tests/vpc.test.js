@@ -43,7 +43,7 @@ describe('Check S3 app', () => {
     }
   });
 
-  it.only('should get bucket Encryption', async () => {
+  it('should get bucket Encryption', async () => {
     const cloudxBuckets = await getListOfBucketsContainingName('cloudx');
 
     for (const bucket of cloudxBuckets) {
@@ -52,6 +52,15 @@ describe('Check S3 app', () => {
 
       expect(BucketKeyEnabled).to.be.false;
       expect(BucketKeyEnabled).to.be.false;
+    }
+  });
+
+  it.only('should get bucket versioning', async () => {
+    const cloudxBuckets = await getListOfBucketsContainingName('cloudx');
+
+    for (const bucket of cloudxBuckets) {
+      const resp = await s3.getBucketVersioning({ Bucket: bucket.Name }).promise();
+      expect(resp.Status).to.be.undefined;
     }
   });
 });
