@@ -1,6 +1,7 @@
 import { ec2, s3} from "../aws/sdk.js";
 import { expect } from "chai";
 import httpRequest from "../utils/httpRequester.js";
+import  getListOfBucketsContainingName from "../utils/get-bucket-list.js";
 
 describe('Check stack parameters', ()=> {
   it('should get ec2 metadata',async () => {
@@ -30,9 +31,8 @@ describe('Check S3 app', () => {
     expect(hasCloudxBuckets).to.equal(true);
   });
 
-  it.only('check tags for cloudx', async () => {
-    const data = await s3.listBuckets().promise();
-    const cloudxBuckets = data.Buckets.filter(bucket => bucket.Name.includes('cloudx'));
+  it('should get tags for buckets', async () => {
+    const cloudxBuckets = await getListOfBucketsContainingName('cloudx');
     
     for (const bucket of cloudxBuckets) {
       const resp = await s3.getBucketTagging({ Bucket: bucket.Name }).promise();
@@ -42,11 +42,25 @@ describe('Check S3 app', () => {
       expect(cloudxTag.Value).to.equal('qa');
     }
   });
+
+  it.only('should get bucket Encryption', async () => {
+    const cloudxBuckets = await getListOfBucketsContainingName('cloudx');
+
+    for (const bucket of cloudxBuckets) {
+      const resp = await s3.getBucketEncryption({ Bucket: bucket.Name }).promise();
+      const { BucketKeyEnabled } = resp.ServerSideEncryptionConfiguration.Rules[0];
+
+      expect(BucketKeyEnabled).to.be.false;
+      expect(BucketKeyEnabled).to.be.false;
+    }
+  });
 });
 
 const config = {
   url: 'http://52.90.88.242/api/image',
   method: 'get'
 }
+
+
 // const response = await httpRequest(config);
 // console.log('****', data);
