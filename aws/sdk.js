@@ -9,6 +9,9 @@ AWS.config.getCredentials(function (err) {
   }
 });
 
-const ec2 = new AWS.EC2({ region: 'us-east-1', apiVersion: '2016-11-15' });
+const params = { region: 'us-east-1', apiVersion: '2016-11-15' }
 
-export default ec2;
+const ec2 = new AWS.EC2(params);
+const s3 = new AWS.S3(params);
+
+export { ec2, s3 };
