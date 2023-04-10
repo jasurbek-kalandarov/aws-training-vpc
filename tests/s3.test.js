@@ -5,6 +5,7 @@ import fs from 'fs';
 import httpRequest from "../utils/httpRequester.js";
 import  getListOfBucketsContainingName from "../utils/get-bucket-list.js"
 import { readdir } from 'fs/promises';
+import Randomstring from "randomstring";
 
 describe('Check S3 app metadata', () => {
   it('should get a list of S3 buckets', async () => {
@@ -107,9 +108,11 @@ describe('Checkt S3 app functionality', () => {
 
     //Check response status and data
     expect(resp.status).to.equal(200);
-    expect(resp.data).to.be.true;
+    expect(resp.data).to.be.not.undefined;
 
-    const downloadedFile = fs.createWriteStream('./downloads/downdload.jpg');
+    const newFileName = Randomstring.generate(6);
+
+    const downloadedFile = fs.createWriteStream(`./downloads/${newFileName}.jpg`);
     downloadedFile.write(resp.data);
 
     let listOfFiles = await readdir('./downloads/');
@@ -125,7 +128,7 @@ describe('Checkt S3 app functionality', () => {
       method: 'get'
     });
 
-    const lastImageId = allImages.data.length;
+    const lastImageId = allImages.data[allImages.data.length - 1].id;
     
     const deleteResponse = await httpRequest({
       url: `http://52.90.88.242/api/image/${lastImageId}`,
