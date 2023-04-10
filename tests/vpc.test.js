@@ -79,8 +79,6 @@ describe('Check S3 app metadata', () => {
 });
 
 describe.only('Checkt S3 app functionality', () => {
-  const bucketName = 'cloudximage-imagestorebucketf57d958e-1fxx6zl1nv5r4';
-
   it('should upload an image to bucket', async () => {
     const data = new FormData();
     data.append('upfile', fs.createReadStream('./screenshots/test report.jpg'));
@@ -96,6 +94,22 @@ describe.only('Checkt S3 app functionality', () => {
 
     const resp = await httpRequest(config);
     expect(resp.status).to.equal(204);
+  });
+
+  it.only('should get all images', async () => {
+    const config = {
+      url: 'http://52.90.88.242/api/image',
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+
+    const resp = await httpRequest(config);
+
+    expect(resp.status).to.equal(200);
+    expect(resp.data.length).to.greaterThan(0);
+    expect(resp.data[0]).to.have.all.keys(['id', 'last_modified', 'object_key', 'object_size', 'object_type']);
   });
   
 });
