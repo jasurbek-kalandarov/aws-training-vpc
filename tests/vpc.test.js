@@ -1,5 +1,7 @@
 import { ec2, s3} from "../aws/sdk.js";
 import { expect } from "chai";
+import FormData from "form-data";
+import fs from 'fs';
 import httpRequest from "../utils/httpRequester.js";
 import  getListOfBucketsContainingName from "../utils/get-bucket-list.js";
 
@@ -76,10 +78,27 @@ describe('Check S3 app metadata', () => {
   });
 });
 
-const config = {
-  url: 'http://52.90.88.242/api/image',
-  method: 'get'
-}
+describe.only('Checkt S3 app functionality', () => {
+  const bucketName = 'cloudximage-imagestorebucketf57d958e-1fxx6zl1nv5r4';
+
+  it('should upload an image to bucket', async () => {
+    const data = new FormData();
+    data.append('upfile', fs.createReadStream('./screenshots/test report.jpg'));
+
+    const config = {
+      url: 'http://52.90.88.242/api/image',
+      method: 'post',
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      data
+    }
+
+    const resp = await httpRequest(config);
+    expect(resp.status).to.equal(204);
+  });
+  
+});
 
 
 // const response = await httpRequest(config);
