@@ -134,5 +134,17 @@ describe('Checkt S3 app functionality', () => {
 
     expect(deleteResponse.status).to.equal(204);
   });
+
+  it('should get image metada', async () => {
+    const resp = await httpRequest({
+      url: 'http://52.90.88.242/api/image/1',
+      method: 'get'
+    });
+
+    const expectedKeys = ['id', 'last_modified', 'object_key', 'object_size', 'object_type'];
+
+    expect(resp.status).to.equal(200);
+    expect(resp.data).to.have.all.keys(expectedKeys);
+  });
   
 });
