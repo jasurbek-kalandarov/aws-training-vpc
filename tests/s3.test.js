@@ -94,7 +94,7 @@ describe('Checkt S3 app functionality', () => {
     expect(resp.data[0]).to.have.all.keys(expectedKeys);
   });
 
-  it.only('should download an image by id', async () => {
+  it('should download an image by id', async () => {
     const config = {
       url: 'http://52.90.88.242/api/image/file/1',
       method: 'get',
@@ -117,6 +117,22 @@ describe('Checkt S3 app functionality', () => {
     listOfFiles.forEach(fileName => {
       expect(fileName).to.match(/\w+\.jpg/);
     })
+  });
+
+  it('should be able to delete image by id', async () => {
+    const allImages = await httpRequest({
+      url: 'http://52.90.88.242/api/image',
+      method: 'get'
+    });
+
+    const lastImageId = allImages.data.length;
+    
+    const deleteResponse = await httpRequest({
+      url: `http://52.90.88.242/api/image/${lastImageId}`,
+      method: 'delete' 
+    });
+
+    expect(deleteResponse.status).to.equal(204);
   });
   
 });
