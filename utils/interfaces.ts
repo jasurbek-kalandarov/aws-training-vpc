@@ -6,6 +6,7 @@ export interface PublicInstance {
   BlockDeviceMappings: EC2.InstanceBlockDeviceMappingList | undefined;
   PlatformDetails: string | undefined;
   PublicIpAddress: string | undefined;
+  InstanceId: string | undefined;
 }
 
 export interface PrivateInstance {
@@ -14,13 +15,16 @@ export interface PrivateInstance {
   BlockDeviceMappings: EC2.InstanceBlockDeviceMappingList | undefined;
   PlatformDetails: string | undefined;
   PrivateIpAddress: string | undefined;
+  InstanceId: string | undefined;
+  PublicIpAddress: string | undefined;
 }
 
 export interface InstancesData {
   keyPairId: string;
   privateInstance: {
     id: string,
-    privateIp: string
+    privateIp: string,
+    publicIp: undefined
   };
   publicInstance: {
     id: string,

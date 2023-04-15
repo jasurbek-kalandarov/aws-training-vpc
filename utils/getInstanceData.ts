@@ -10,10 +10,11 @@ export async function getPublicInstanceData(): Promise<PublicInstance> {
     Tags,
     BlockDeviceMappings,
     PlatformDetails,
-    PublicIpAddress
-  } = response?.Reservations![1].Instances![0];
+    PublicIpAddress,
+    InstanceId
+  } = response?.Reservations![2].Instances![0];
 
-  return { InstanceType, Tags, BlockDeviceMappings, PlatformDetails, PublicIpAddress };
+  return { InstanceType, Tags, BlockDeviceMappings, PlatformDetails, PublicIpAddress, InstanceId };
 }
 
 export async function getPrivateInstanceData(): Promise<PrivateInstance> {
@@ -23,8 +24,10 @@ export async function getPrivateInstanceData(): Promise<PrivateInstance> {
     Tags,
     BlockDeviceMappings,
     PlatformDetails,
-    PrivateIpAddress
-  } = response?.Reservations![2].Instances![0];
+    PrivateIpAddress,
+    InstanceId,
+    PublicIpAddress
+  } = response?.Reservations![1].Instances![0];
 
-  return { InstanceType, Tags, BlockDeviceMappings, PlatformDetails, PrivateIpAddress };
+  return { InstanceType, Tags, BlockDeviceMappings, PlatformDetails, PrivateIpAddress, InstanceId, PublicIpAddress };
 }
