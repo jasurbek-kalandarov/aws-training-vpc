@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
-    "test": "mocha 'tests/**/*.js' --recursive --reporter mochawesome --timeout 60000 --exit"
+    "test": "ts-mocha -p ./tsconfig.json 'tests/**/*.ts' --recursive --reporter mochawesome --timeout 60000 --exit"
   },
   "keywords": [],
   "author": "",
@@ -19,10 +18,13 @@
     "form-data": "^4.0.0",
     "mocha": "^10.2.0",
     "randomstring": "^1.2.3",
+    "ts-mocha": "^10.0.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@types/chai": "^4.3.4",
     "@types/node": "^18.15.11",
+    "@types/randomstring": "^1.1.8",
     "dotenv": "^16.0.3",
     "mochawesome": "^7.1.3"
   }

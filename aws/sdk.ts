@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk';
 
-AWS.config.getCredentials(function (err) {
+AWS.config.getCredentials((err: Error | null) => {
   if (err) {
     console.log(err.stack);
     console.warn('Credentials not found');

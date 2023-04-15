@@ -1,9 +1,0 @@
-import { s3 } from '../aws/sdk.js';
-
-async function getListOfBucketsContainingName(name) {
-  const data = await s3.listBuckets().promise();
-  const cloudxBuckets = data.Buckets.filter(bucket => bucket.Name.includes(name));
-  return cloudxBuckets;
-}
-
-export default getListOfBucketsContainingName;
