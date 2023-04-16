@@ -21,14 +21,45 @@ export interface PrivateInstance {
 
 export interface CloudxInfo {
   keyPairId: string;
-  privateInstance: {
-    id: string,
-    privateIp: string,
-    publicIp: undefined
-  };
-  publicInstance: {
-    id: string,
-    privateIp: string,
-    publicIp: string
-  }
+  privateInstance: PrivateInstanceData;
+  publicInstance: PublicInstanceData;
+  vpcs?: VPC[];
+}
+
+export interface CloudxImage {
+  instance: PublicInstanceData;
+  db: {
+    name: string;
+    port: number;
+    secretName: string;
+    userName: string;
+  },
+  bucket: {
+    name: string;
+  },
+  keyPairId: string;
+}
+
+interface PublicInstanceData {
+  id: string,
+  privateIp: string,
+  publicIp: string
+}
+
+interface PrivateInstanceData {
+  id: string,
+  privateIp: string,
+  publicIp: undefined
+}
+
+interface VPC {
+  cidrBlock: 'string';
+  state: 'string';
+  vpcId: string;
+  tags: Tag[] | [];
+}
+
+interface Tag {
+  Key: string;
+  Value: string;
 }
