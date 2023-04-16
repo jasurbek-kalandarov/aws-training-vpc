@@ -19,7 +19,7 @@ export interface PrivateInstance {
   PublicIpAddress: string | undefined;
 }
 
-export interface InstancesData {
+export interface CloudxInfo {
   keyPairId: string;
   privateInstance: {
     id: string,

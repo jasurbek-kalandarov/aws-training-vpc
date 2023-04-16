@@ -1,15 +1,15 @@
 import { expect } from 'chai'
 import { getPrivateInstanceData, getPublicInstanceData } from '../utils/getInstanceData';
 import { readJsonData } from '../utils/readData';
-import { InstancesData, PrivateInstance, PublicInstance } from '../utils/interfaces';
+import { CloudxInfo, PrivateInstance, PublicInstance } from '../utils/interfaces';
 
 describe('Public Intance', () => {
   let publicInstance: PublicInstance; 
-  let instancesData: InstancesData;
+  let instancesData: CloudxInfo;
 
   before(async () => {
     publicInstance = await getPublicInstanceData();
-    instancesData = await readJsonData();
+    instancesData = await readJsonData('cloudxinfo');
   });
   
   it('should have instance id', async () => {
@@ -38,11 +38,11 @@ describe('Public Intance', () => {
 
 describe('Private Instance', () => {
   let privateInstance: PrivateInstance;
-  let instancesData: InstancesData;
+  let instancesData: CloudxInfo;
   
   before(async () => {
     privateInstance = await getPrivateInstanceData();
-    instancesData = await readJsonData();
+    instancesData = await readJsonData('cloudxinfo');
   });
 
   it('should have instance id', async () => {
