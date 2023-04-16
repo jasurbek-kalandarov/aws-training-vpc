@@ -6,14 +6,14 @@ import { readJsonData } from "../utils/readData";
 
 let cloudxinfo: CloudxInfo;
 
-describe.only('VPC', ()=> {
+describe('VPC', ()=> {
   let VpcId: string | undefined;
   let CidrBlock: string | undefined;
   let State: string | undefined;
   let Tags: EC2.TagList | undefined;
 
   const vpcs = ['First VPC', 'Second VPC'];
-  
+
   vpcs.forEach((vpc, index) => {
     describe(`${vpc}`, () => {
       before(async () => {
