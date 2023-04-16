@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 
-export async function readJsonData() {
-  const data = await fs.readFile('./data/data.json', { encoding: 'utf-8' });
+export async function readJsonData(fileName: 'cloudxinfo' | 'cloudximage') {
+  const data = await fs.readFile(`./data/${fileName}Data.json`, { encoding: 'utf-8' });
   return JSON.parse(data);
 };
