@@ -6,7 +6,8 @@ import httpRequest from "../utils/httpRequester";
 import  getListOfBucketsContainingName from "../utils/get-bucket-list"
 import { readdir } from 'fs/promises';
 import Randomstring from "randomstring";
-import S3, { Bucket } from "aws-sdk/clients/s3";
+import { Bucket } from "aws-sdk/clients/s3";
+import { RequestBuilder } from '../data/request-configs';
 
 describe.skip('Check S3 app metadata', () => {
   let cloudxBuckets: Bucket[];
@@ -57,20 +58,22 @@ describe.skip('Check S3 app metadata', () => {
 });
 
 describe.skip('Checkt S3 app functionality', () => {
+  let requestConfig: RequestBuilder;
+
+  beforeEach(() => {
+    requestConfig = new RequestBuilder();
+  });
+  
   it('should upload an image to bucket', async () => {
     const data = new FormData();
     data.append('upfile', fs.createReadStream('./screenshots/test report.jpg'));
 
-    const config = {
-      url: 'http://52.90.88.242/api/image',
-      method: 'post',
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-      data
-    }
+    requestConfig
+      .setUrl('/image')
+      .setMethod("post")
+      .setData(data);
 
-    const resp = await httpRequest(config);
+    const resp = await httpRequest(requestConfig);
     expect(resp.status).to.equal(204);
   });
 
@@ -83,6 +86,10 @@ describe.skip('Checkt S3 app functionality', () => {
       }
     }
 
+    requestConfig
+      .setUrl('/image')
+      .setMethod("get");
+      
     const resp = await httpRequest(config);
 
     const expectedKeys = ['id', 'last_modified', 'object_key', 'object_size', 'object_type'];
@@ -93,15 +100,11 @@ describe.skip('Checkt S3 app functionality', () => {
   });
 
   it('should download an image by id', async () => {
-    const config = {
-      url: 'http://52.90.88.242/api/image/file/1',
-      method: 'get',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
+    requestConfig
+      .setUrl('/image/file/1')
+      .setMethod("get");
 
-    const resp = await httpRequest(config);
+    const resp = await httpRequest(requestConfig);
 
     //Check response status and data
     expect(resp.status).to.equal(200);
@@ -112,34 +115,36 @@ describe.skip('Checkt S3 app functionality', () => {
     const downloadedFile = fs.createWriteStream(`./downloads/${newFileName}.jpg`);
     downloadedFile.write(resp.data);
 
-    let listOfFiles = await readdir('./downloads/');
     //Check file is successfully downloaded to the folder
-    listOfFiles.forEach(fileName => {
-      expect(fileName).to.match(/\w+\.jpg/); // need to check with newFileName
-    })
+    let listOfFiles = await readdir('./downloads/');
+    const newFileInDir = listOfFiles.find(fileName => fileName === newFileName);
+    expect(newFileInDir).to.include(newFileName);
   });
 
   it('should be able to delete image by id', async () => {
-    const allImages = await httpRequest({
-      url: 'http://52.90.88.242/api/image',
-      method: 'get'
-    });
+    requestConfig
+      .setUrl('/image')
+      .setMethod("get");
+
+    const allImages = await httpRequest(requestConfig);
 
     const lastImageId = allImages.data[allImages.data.length - 1].id;
     
-    const deleteResponse = await httpRequest({
-      url: `http://52.90.88.242/api/image/${lastImageId}`,
-      method: 'delete' 
-    });
+    requestConfig
+      .setUrl(`/image/${lastImageId}`)
+      .setMethod("delete");
+
+    const deleteResponse = await httpRequest(requestConfig);
 
     expect(deleteResponse.status).to.equal(204);
   });
 
   it('should get image metada', async () => {
-    const resp = await httpRequest({
-      url: 'http://52.90.88.242/api/image/1',
-      method: 'get'
-    });
+    requestConfig
+      .setUrl('/image/1')
+      .setMethod("get");
+
+    const resp = await httpRequest(requestConfig);
 
     const expectedKeys = ['id', 'last_modified', 'object_key', 'object_size', 'object_type'];
 
