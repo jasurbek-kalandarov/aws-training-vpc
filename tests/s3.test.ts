@@ -57,7 +57,7 @@ describe.skip('Check S3 app metadata', () => {
   });
 });
 
-describe.skip('Checkt S3 app functionality', () => {
+describe('Checkt S3 app functionality', () => {
   let requestConfig: RequestBuilder;
 
   beforeEach(() => {
@@ -71,26 +71,20 @@ describe.skip('Checkt S3 app functionality', () => {
     requestConfig
       .setUrl('/image')
       .setMethod("post")
-      .setData(data);
+      .setData(data)
+      .setHeaders("multipart/form-data");
 
     const resp = await httpRequest(requestConfig);
     expect(resp.status).to.equal(204);
   });
 
   it('should get all images', async () => {
-    const config = {
-      url: 'http://52.90.88.242/api/image',
-      method: 'get',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
-
     requestConfig
       .setUrl('/image')
-      .setMethod("get");
+      .setMethod("get")
+      .setHeaders("application/json");
       
-    const resp = await httpRequest(config);
+    const resp = await httpRequest(requestConfig);
 
     const expectedKeys = ['id', 'last_modified', 'object_key', 'object_size', 'object_type'];
 
@@ -102,7 +96,8 @@ describe.skip('Checkt S3 app functionality', () => {
   it('should download an image by id', async () => {
     requestConfig
       .setUrl('/image/file/1')
-      .setMethod("get");
+      .setMethod("get")
+      .setHeaders("application/json");
 
     const resp = await httpRequest(requestConfig);
 
@@ -115,16 +110,20 @@ describe.skip('Checkt S3 app functionality', () => {
     const downloadedFile = fs.createWriteStream(`./downloads/${newFileName}.jpg`);
     downloadedFile.write(resp.data);
 
+    console.log(newFileName)
+
     //Check file is successfully downloaded to the folder
     let listOfFiles = await readdir('./downloads/');
-    const newFileInDir = listOfFiles.find(fileName => fileName === newFileName);
-    expect(newFileInDir).to.include(newFileName);
+    setTimeout(() => {
+      expect(listOfFiles).to.include(`${newFileName}.jpg`);
+    }, 500);
   });
 
   it('should be able to delete image by id', async () => {
     requestConfig
       .setUrl('/image')
-      .setMethod("get");
+      .setMethod("get")
+      .setHeaders("application/json");
 
     const allImages = await httpRequest(requestConfig);
 
@@ -132,7 +131,8 @@ describe.skip('Checkt S3 app functionality', () => {
     
     requestConfig
       .setUrl(`/image/${lastImageId}`)
-      .setMethod("delete");
+      .setMethod("delete")
+      .setHeaders("application/json");
 
     const deleteResponse = await httpRequest(requestConfig);
 
@@ -142,7 +142,8 @@ describe.skip('Checkt S3 app functionality', () => {
   it('should get image metada', async () => {
     requestConfig
       .setUrl('/image/1')
-      .setMethod("get");
+      .setMethod("get")
+      .setHeaders("application/json");
 
     const resp = await httpRequest(requestConfig);
 
