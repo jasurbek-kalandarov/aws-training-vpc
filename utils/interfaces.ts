@@ -30,9 +30,19 @@ export interface CloudxImage {
   instance: PublicInstanceData;
   db: {
     name: string;
+    host: string;
     port: number;
     secretName: string;
     userName: string;
+    instanceType: string;
+    instanceArn: string;
+    multiAZ: boolean;
+    storageSize: number;
+    storageType: string;
+    encrytion: boolean;
+    engine: string;
+    engineVersion: string;
+    tags: Tag[] | undefined;
   },
   bucket: {
     name: string;
