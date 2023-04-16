@@ -7,7 +7,7 @@ import  getListOfBucketsContainingName from "../utils/get-bucket-list"
 import { readdir } from 'fs/promises';
 import Randomstring from "randomstring";
 import { Bucket } from "aws-sdk/clients/s3";
-import { RequestBuilder } from '../data/request-configs';
+import { RequestBuilder } from '../utils/request-configs';
 
 describe.skip('Check S3 app metadata', () => {
   let cloudxBuckets: Bucket[];
