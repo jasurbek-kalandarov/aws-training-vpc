@@ -6,17 +6,20 @@ import httpRequest from "../utils/httpRequester";
 import  getListOfBucketsContainingName from "../utils/get-bucket-list"
 import { readdir } from 'fs/promises';
 import Randomstring from "randomstring";
+import S3, { Bucket } from "aws-sdk/clients/s3";
 
 describe.skip('Check S3 app metadata', () => {
-  it('should get a list of S3 buckets', async () => {
-    const data = await s3.listBuckets().promise();
-    const hasCloudxBuckets = data?.Buckets?.some(bucket => bucket?.Name?.includes('cloudx'));
-    expect(hasCloudxBuckets).to.equal(true);
+  let cloudxBuckets: Bucket[];
+
+  before(async () => {
+    cloudxBuckets = await getListOfBucketsContainingName('cloudx');
   });
 
-  it('should get tags for buckets', async () => {
-    const cloudxBuckets = await getListOfBucketsContainingName('cloudx');
-    
+  it('should get a list of S3 buckets', async () => {
+    expect(cloudxBuckets).to.equal(true);
+  });
+
+  it('should get tags for buckets', async () => {    
     for (const bucket of cloudxBuckets) {
       const resp = await s3.getBucketTagging({ Bucket: bucket?.Name! }).promise();
       const [ cloudxTag ] = resp.TagSet.filter(tagName => tagName.Key === 'cloudx');
@@ -27,8 +30,6 @@ describe.skip('Check S3 app metadata', () => {
   });
 
   it('should get bucket Encryption', async () => {
-    const cloudxBuckets = await getListOfBucketsContainingName('cloudx');
-
     for (const bucket of cloudxBuckets) {
       const resp = await s3.getBucketEncryption({ Bucket: bucket?.Name! }).promise();
       const { BucketKeyEnabled } = resp?.ServerSideEncryptionConfiguration!.Rules![0];
@@ -39,8 +40,6 @@ describe.skip('Check S3 app metadata', () => {
   });
 
   it('should get bucket versioning', async () => {
-    const cloudxBuckets = await getListOfBucketsContainingName('cloudx');
-
     for (const bucket of cloudxBuckets) {
       const resp = await s3.getBucketVersioning({ Bucket: bucket?.Name! }).promise();
       expect(resp.Status).to.be.undefined;
@@ -48,8 +47,6 @@ describe.skip('Check S3 app metadata', () => {
   });
 
   it('should get bucket public access', async () => {
-    const cloudxBuckets = await getListOfBucketsContainingName('cloudx');
-
     for (const bucket of cloudxBuckets) {
       const resp = await s3.getBucketAcl({ Bucket: bucket?.Name! }).promise();
 
