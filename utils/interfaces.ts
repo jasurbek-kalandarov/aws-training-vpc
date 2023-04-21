@@ -33,6 +33,7 @@ export interface CloudxImage {
     host: string;
     port: number;
     secretName: string;
+    password: string;
     userName: string;
     instanceType: string;
     instanceArn: string;
@@ -72,4 +73,12 @@ interface VPC {
 interface Tag {
   Key: string;
   Value: string;
+}
+
+export interface Image {
+  id: number;
+  object_key: string;
+  object_type: string;
+  last_modified: string;
+  object_size: number;
 }
