@@ -8,8 +8,9 @@ import { readdir } from 'fs/promises';
 import Randomstring from "randomstring";
 import { Bucket } from "aws-sdk/clients/s3";
 import { RequestBuilder } from '../utils/request-configs';
+import { Image } from '../utils/interfaces';
 
-describe.skip('Check S3 app metadata', () => {
+describe('Check S3 app metadata', () => {
   let cloudxBuckets: Bucket[];
 
   before(async () => {
@@ -74,7 +75,7 @@ describe('Checkt S3 app functionality', () => {
       .setData(data)
       .setHeaders("multipart/form-data");
 
-    const resp = await httpRequest(requestConfig);
+    const resp = await httpRequest<Image[]>(requestConfig);
     expect(resp.status).to.equal(204);
   });
 
@@ -84,7 +85,7 @@ describe('Checkt S3 app functionality', () => {
       .setMethod("get")
       .setHeaders("application/json");
       
-    const resp = await httpRequest(requestConfig);
+    const resp = await httpRequest<Image[]>(requestConfig);
 
     const expectedKeys = ['id', 'last_modified', 'object_key', 'object_size', 'object_type'];
 
@@ -125,9 +126,8 @@ describe('Checkt S3 app functionality', () => {
       .setMethod("get")
       .setHeaders("application/json");
 
-    const allImages = await httpRequest(requestConfig);
-
-    const lastImageId = allImages.data[allImages.data.length - 1].id;
+      const { data: allImages } = await httpRequest<Image[]>(requestConfig);
+      const lastImageId = allImages[allImages.length - 1].id;
     
     requestConfig
       .setUrl(`/image/${lastImageId}`)
