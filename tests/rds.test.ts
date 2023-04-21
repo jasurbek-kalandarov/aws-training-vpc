@@ -1,10 +1,15 @@
+import fs from 'fs';
+import FormData from "form-data";
 import { expect } from 'chai';
-import { rds, rdsQuery }  from '../aws/sdk';
-import { CloudxImage } from '../utils/interfaces';
+import { rds }  from '../aws/sdk';
+import { CloudxImage, Image } from '../utils/interfaces';
 import { readJsonData } from '../utils/readData';
 import { Tag } from '@aws-sdk/client-ec2';
+import { myDb } from '../db/mysql';
+import { RequestBuilder } from '../utils/request-configs';
+import httpRequest from '../utils/httpRequester';
 
-describe.skip('RDS', () => {
+describe('RDS', () => {
      
   describe('Check Database metadata', async () => {
     let AllocatedStorage: number | undefined; 
@@ -74,30 +79,74 @@ describe.skip('RDS', () => {
   });
 
   describe('Check connection and query to DB', () => {
-    let endpoint;
-    let db: CloudxImage['db'];
+    let requestConfig: RequestBuilder;
 
     before(async () => {
-      ({ db } = await readJsonData('cloudximage'));
-      const response = await rds.describeDBInstances().promise();
-      endpoint = response.DBInstances![0].Endpoint?.Address;
-      // console.log(response);
+      requestConfig = new RequestBuilder();
+      const data = new FormData();
+      data.append('upfile', fs.createReadStream('./screenshots/test report.jpg'));
+  
+      requestConfig
+        .setUrl('/image')
+        .setMethod("post")
+        .setData(data)
+        .setHeaders("multipart/form-data");
+  
+      const resp = await httpRequest(requestConfig);
+      expect(resp.status).to.equal(204);
+    });
+
+    beforeEach(() => {
+      requestConfig = new RequestBuilder();
     });
 
     it('should be able to get image by id', async () => {
-      const params = {
-        awsSecretStoreArn: `${db.secretName}`,
-        dbClusterOrInstanceArn: db.instanceArn,
-        sqlStatements: `select * from ${db.name}`
-      }
-      const response = rdsQuery.executeSql(params, (err, data) => {
-        if (err) {
-          throw new Error(err.message);
-        }
-        console.log(data);
-        return data;
-      });
-      // console.log(response)
+      const expectedImageId = 1
+      const [ data ] = await myDb.select('*').from('images').where({ id: expectedImageId }) as Image[];
+      expect(expectedImageId).to.equal(data.id);
     });
+
+    it('should have image metada', async () => {
+      requestConfig
+        .setUrl('/image/1')
+        .setMethod("get")
+        .setHeaders("application/json");
+
+      const { data: image1 } = await httpRequest<Image>(requestConfig);
+      let [ data ] = await myDb.select('*').from('images').where({ id: 1 }) as Image[];
+      
+      const expectedKeys = [
+        'id' as keyof Image, 
+        'object_key' as keyof Image, 
+        'object_size' as keyof Image, 
+        'object_type' as keyof Image
+      ];
+
+      expectedKeys.forEach(key => {
+        expect(image1[key]).to.equal(data[key]);
+      });
+    });
+
+    it('The image metadata for the deleted image is also deleted from the database', async () => {
+      requestConfig
+        .setUrl('/image')
+        .setMethod("get")
+        .setHeaders("application/json");
+
+      const {data: allImages} = await httpRequest<Image[]>(requestConfig);
+      const lastImageId = allImages[allImages.length - 1].id;
+
+      requestConfig
+        .setUrl(`/image/${lastImageId}`)
+        .setMethod("delete")
+        .setHeaders("application/json");
+
+      const deleteResponse = await httpRequest(requestConfig);
+      expect(deleteResponse.status).to.equal(204);
+
+      const deletedImage = await myDb.select('*').from('images').where({ id: lastImageId });
+      expect(deletedImage).to.be.empty;
+    });
+
   });
 });
