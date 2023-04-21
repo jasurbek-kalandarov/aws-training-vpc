@@ -1,4 +1,11 @@
 import FormData from "form-data";
+import { CloudxImage } from '../utils/interfaces';
+import fs from 'fs';
+
+let db: CloudxImage
+
+const connectionData = fs.readFileSync('./data/cloudximageData.json', { encoding:"utf-8"});
+(db = JSON.parse(connectionData));
 
 export class RequestBuilder {
   private baseURL: string;
@@ -8,7 +15,7 @@ export class RequestBuilder {
   private url: string;
 
   constructor() {
-    this.baseURL = `http://3.95.253.240/api`;
+    this.baseURL = `http://${db.instance.publicIp}/api`;
     this.url = '';
     this.headers = { 'Content-Type': 'application/json' };
     this.method = 'get' || 'post' || 'delete';
