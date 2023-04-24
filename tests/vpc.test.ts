@@ -2,7 +2,7 @@ import { EC2 } from "aws-sdk";
 import { ec2 } from "../aws/sdk";
 import { expect } from "chai";
 import { CloudxInfo } from "../utils/interfaces";
-import { readJsonData } from "../utils/readData";
+import { readJsonData } from "../utils/index";
 
 let cloudxinfo: CloudxInfo;
 

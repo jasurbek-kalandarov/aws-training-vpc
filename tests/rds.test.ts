@@ -3,11 +3,9 @@ import FormData from "form-data";
 import { expect } from 'chai';
 import { rds }  from '../aws/sdk';
 import { CloudxImage, Image } from '../utils/interfaces';
-import { readJsonData } from '../utils/readData';
+import { readJsonData, httpRequest, RequestBuilder } from '../utils/index';
 import { Tag } from '@aws-sdk/client-ec2';
 import { myDb } from '../db/mysql';
-import { RequestBuilder } from '../utils/request-configs';
-import httpRequest from '../utils/httpRequester';
 
 describe('RDS', () => {
      

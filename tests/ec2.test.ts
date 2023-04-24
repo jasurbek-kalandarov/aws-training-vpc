@@ -1,6 +1,9 @@
 import { expect } from 'chai'
-import { getPrivateInstanceData, getPublicInstanceData } from '../utils/getInstanceData';
-import { readJsonData } from '../utils/readData';
+import { 
+  getPrivateInstanceData, 
+  getPublicInstanceData, 
+  readJsonData
+} from '../utils/index';
 import { CloudxInfo, PrivateInstance, PublicInstance } from '../utils/interfaces';
 
 describe('Public Intance', () => {

@@ -2,12 +2,10 @@ import { s3 } from "../aws/sdk";
 import { expect } from "chai";
 import FormData from "form-data";
 import fs from 'fs';
-import httpRequest from "../utils/httpRequester";
-import  getListOfBucketsContainingName from "../utils/get-bucket-list"
+import  { getListOfBucketsContainingName, RequestBuilder, httpRequest } from "../utils/index";
 import { readdir } from 'fs/promises';
 import Randomstring from "randomstring";
 import { Bucket } from "aws-sdk/clients/s3";
-import { RequestBuilder } from '../utils/request-configs';
 import { Image } from '../utils/interfaces';
 
 describe('Check S3 app metadata', () => {
