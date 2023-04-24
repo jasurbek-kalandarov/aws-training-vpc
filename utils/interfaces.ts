@@ -28,27 +28,35 @@ export interface CloudxInfo {
 
 export interface CloudxImage {
   instance: PublicInstanceData;
-  db: {
-    name: string;
-    host: string;
-    port: number;
-    secretName: string;
-    password: string;
-    userName: string;
-    instanceType: string;
-    instanceArn: string;
-    multiAZ: boolean;
-    storageSize: number;
-    storageType: string;
-    encrytion: boolean;
-    engine: string;
-    engineVersion: string;
-    tags: Tag[] | undefined;
-  },
+  db: Database,
   bucket: {
     name: string;
   },
   keyPairId: string;
+  sns: {
+    topicArn: string;
+  }
+  sqs: {
+    queueUrl: string;
+  }
+}
+
+interface Database {
+  name: string;
+  host: string;
+  port: number;
+  secretName: string;
+  password: string;
+  userName: string;
+  instanceType: string;
+  instanceArn: string;
+  multiAZ: boolean;
+  storageSize: number;
+  storageType: string;
+  encrytion: boolean;
+  engine: string;
+  engineVersion: string;
+  tags: Tag[] | undefined;
 }
 
 interface PublicInstanceData {
@@ -81,4 +89,8 @@ export interface Image {
   object_type: string;
   last_modified: string;
   object_size: number;
+}
+
+export interface TopicArn {
+  TopicArn: string;
 }
