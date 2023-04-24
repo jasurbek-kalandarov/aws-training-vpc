@@ -3,3 +3,7 @@ mochawesome-report/
 .env
 data/
 downloads
+/test-results/
+/playwright-report/
+/playwright/.cache/
+reports

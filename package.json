@@ -4,13 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "ts-mocha -p ./tsconfig.json 'tests/**/*.ts' --recursive --reporter mochawesome --timeout 60000 --exit"
+    "test": "ts-mocha -p ./tsconfig.json 'tests/**/*.ts' --recursive --reporter mochawesome --timeout 60000 --exit",
+    "ui": "npx playwright test",
+    "report": "npx playwright show-report reports/html-report"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-ec2": "^3.301.0",
+    "@aws-sdk/client-sns": "^3.316.0",
     "@types/mocha": "^10.0.1",
     "@types/mysql": "^2.15.21",
     "aws-sdk": "^2.1345.0",
@@ -26,6 +29,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.32.3",
     "@types/chai": "^4.3.4",
     "@types/node": "^18.15.11",
     "@types/randomstring": "^1.1.8",
