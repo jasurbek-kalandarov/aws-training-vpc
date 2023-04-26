@@ -7,6 +7,7 @@ import { readdir } from 'fs/promises';
 import Randomstring from "randomstring";
 import { Bucket } from "aws-sdk/clients/s3";
 import { Image } from '../utils/interfaces';
+import util from 'util';
 
 describe('Check S3 app metadata', () => {
   let cloudxBuckets: Bucket[];
@@ -105,17 +106,15 @@ describe('Checkt S3 app functionality', () => {
     expect(resp.data).to.be.not.undefined;
 
     const newFileName = Randomstring.generate(6);
-
-    const downloadedFile = fs.createWriteStream(`./downloads/${newFileName}.jpg`);
-    downloadedFile.write(resp.data);
-
-    console.log(newFileName)
+    const writePromise = fs.writeFile(`./downloads/${newFileName}.jpg`, JSON.stringify(resp.data), {encoding: "utf-8"}, (err) => {
+      if (err) {
+        return err;
+      }
+    });
 
     //Check file is successfully downloaded to the folder
     let listOfFiles = await readdir('./downloads/');
-    setTimeout(() => {
-      expect(listOfFiles).to.include(`${newFileName}.jpg`);
-    }, 500);
+    expect(listOfFiles).to.include(`${newFileName}.jpg`);
   });
 
   it('should be able to delete image by id', async () => {
