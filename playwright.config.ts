@@ -17,7 +17,8 @@ export default defineConfig({
   use: {
     trace: 'retain-on-failure',
     video: 'retain-on-failure',
-    headless: false
+    headless: false,
+    acceptDownloads: true
   },
   projects: [
     {
