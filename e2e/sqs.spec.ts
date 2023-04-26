@@ -9,11 +9,6 @@ import { BrowserContext } from '@playwright/test';
 import fs from 'fs';
 import { AxiosResponse } from 'axios';
 
-
-// test('has title', async ({ page }) => {
-  
-// });
-
 test.describe.configure({ mode: 'serial' });
 
 test.describe('SNS', () => {
