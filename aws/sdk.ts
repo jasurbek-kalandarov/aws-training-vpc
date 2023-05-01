@@ -15,5 +15,7 @@ const ec2 = new AWS.EC2(params);
 const s3 = new AWS.S3(params);
 const rds = new AWS.RDS(params);
 const sns = new AWS.SNS(params);
+const dynamoDD = new AWS.DynamoDB(params);
+const lambda = new AWS.Lambda(params);
 
-export { ec2, s3, rds, sns };
+export { ec2, s3, rds, sns, dynamoDD, lambda };
