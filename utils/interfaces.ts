@@ -94,3 +94,10 @@ export interface Image {
 export interface TopicArn {
   TopicArn: string;
 }
+
+export interface CloudxServerless extends CloudxImage {
+  lambda: {
+    functionName: string;
+    arn: string;
+  }
+}
