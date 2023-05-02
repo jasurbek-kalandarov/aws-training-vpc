@@ -77,7 +77,7 @@ describe('Deployment Validation', () => {
 });
 
 describe('Application testing', () => {
-  describe('Checkt S3 app functionality', () => {
+  describe('Check Image app functionality', () => {
     let requestConfig: RequestBuilder;
     let cloudxServerless: CloudxServerless;
 
