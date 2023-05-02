@@ -7,7 +7,6 @@ import { readdir } from 'fs/promises';
 import Randomstring from "randomstring";
 import { Bucket } from "aws-sdk/clients/s3";
 import { Image } from '../utils/interfaces';
-import util from 'util';
 
 describe('Check S3 app metadata', () => {
   let cloudxBuckets: Bucket[];

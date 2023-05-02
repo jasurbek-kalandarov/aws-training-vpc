@@ -22,6 +22,11 @@ export class RequestBuilder {
     this.data = undefined;
   }
 
+  setBaseUrl(url: string) {
+    this.baseURL = `http://${url}/api`;
+    return this;
+  }
+
   setUrl(params: string) {
     this.url = params;
     return this;
