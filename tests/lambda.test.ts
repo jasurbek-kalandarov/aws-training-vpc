@@ -22,7 +22,6 @@ describe('Deployment Validation', () => {
       }
 
       db = await dynamoDD.describeTable(params).promise();
-      console.log(db);
     });
 
     it('table name matches', async () => {
@@ -78,7 +77,7 @@ describe('Deployment Validation', () => {
 });
 
 describe('Application testing', () => {
-  describe.only('Checkt S3 app functionality', () => {
+  describe('Checkt S3 app functionality', () => {
     let requestConfig: RequestBuilder;
     let cloudxServerless: CloudxServerless;
 
